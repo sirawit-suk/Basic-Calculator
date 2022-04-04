@@ -28,62 +28,75 @@
             <button class="btn btn-secondary col m-1" onclick="addNum('1')">1</button>
             <button class="btn btn-secondary col m-1" onclick="addNum('2')">2</button>
             <button class="btn btn-secondary col m-1" onclick="addNum('3')">3</button>
-            <button class="btn btn-orange col m-1" onclick="addNum('1')">+</button>
+            <button class="btn btn-orange col m-1" onclick="operation('add')">+</button>
         </div>
         <div class="row">
             <button class="btn btn-secondary col m-1" onclick="addNum('4')">4</button>
             <button class="btn btn-secondary col m-1" onclick="addNum('5')">5</button>
             <button class="btn btn-secondary col m-1" onclick="addNum('6')">6</button>
-            <button class="btn btn-orange col m-1" onclick="addNum('1')">-</button>
+            <button class="btn btn-orange col m-1" onclick="operation('sub')">-</button>
         </div>
         <div class="row">
             <button class="btn btn-secondary col m-1" onclick="addNum('7')">7</button>
             <button class="btn btn-secondary col m-1" onclick="addNum('8')">8</button>
             <button class="btn btn-secondary col m-1" onclick="addNum('9')">9</button>
-            <button class="btn btn-orange col m-1" onclick="addNum('1')">*</button>
+            <button class="btn btn-orange col m-1" onclick="operation('mul')">*</button>
         </div>
         <div class="row">
             <button class="btn btn-secondary col m-1" onclick="addNum('0')">0</button>
             <button class="btn btn-secondary col m-1" onclick="addDecimal()">.</button>
-            <button class="btn btn-primary col m-1" onclick="addNum('1')">=</button>
-            <button class="btn btn-orange col m-1" onclick="addNum('1')">/</button>
+            <button class="btn btn-primary col m-1" onclick="operation('equ')">=</button>
+            <button class="btn btn-orange col m-1" onclick="operation('div')">/</button>
         </div>
         <div class="row mt-3">
             <button class="btn btn-danger col" onclick="clearCal()">CLEAR</button>
         </div>
-
     </div>
 </div>
-
 <script>
 
     var xmlhttp;
     var calculator = document.getElementById("calculator");
     var isDecimal = false;
+    var isOperand = false;
 
     if (window.ActiveXObject) {
+        console.log("nope!");
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     } else {
+        console.log("yes!");
         xmlhttp = new XMLHttpRequest();
     }
 
-    function makerequest(serverPage, objID) {
-        var obj = document.getElementById(objID);
-        xmlhttp.open("GET", serverPage);
+
+    function makerequest(url, operand = "") {
+
+        let newUrl = url + "?newValue=" + calculator.value + "&operand=" + operand;
+        xmlhttp.open("GET", newUrl); // Have problem with POST method, Don't know yet...
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                obj.innerHTML = xml.http.responseText;
+                if (operand === 'equ')
+                    calculator.value = xmlhttp.responseText;
             }
         }
         xmlhttp.send();
     }
 
     function addNum(number) {
-        if( calculator.value === "0") {
+        if (isOperand === true) {
+            clearScreen();
+        }
+        if (calculator.value === "0") {
             calculator.value = "";
         }
         console.log("Add number: " + number)
         calculator.value = calculator.value + number;
+    }
+
+    function operation(operand) {
+        console.log(operand)
+        isOperand = true;
+        makerequest("/Home/Operation", operand)
     }
 
     function addDecimal() {
@@ -96,14 +109,19 @@
         }
     }
 
-    function operation(operand) {
-        makerequest()
+    function clearScreen() {
+        console.log("clear screen")
+        isDecimal = false;
+        isOperand = false;
+        calculator.value = "0";
     }
 
     function clearCal() {
         console.log("clear")
         isDecimal = false;
+        isOperand = false;
         calculator.value = "0";
         // clear backend
+        makerequest("/Home/AllClear");
     }
 </script>
