@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .btn-orange {
+        color: white;
+        background-color: #EF952D;
+    }
+
+    .btn-orange:hover {
+        color: white;
+        background-color: #e58d29;
+    }
+</style>
+
+<div class="card col-sm-5 mx-auto" style="background-color: #00000022;">
+    <div class="card-body">
+        <div class="row">
+            <h1>Basic Calculator</h1>
+        </div>
+
+        <div class="row">
+            <input id="calculator" class="form-control bg-white text-right" type="text" value="0" readonly>
+        </div>
+
+        <div class="row mt-3">
+            <button class="btn btn-secondary col m-1" onclick="addNum('1')">1</button>
+            <button class="btn btn-secondary col m-1" onclick="addNum('2')">2</button>
+            <button class="btn btn-secondary col m-1" onclick="addNum('3')">3</button>
+            <button class="btn btn-orange col m-1" onclick="addNum('1')">+</button>
+        </div>
+        <div class="row">
+            <button class="btn btn-secondary col m-1" onclick="addNum('4')">4</button>
+            <button class="btn btn-secondary col m-1" onclick="addNum('5')">5</button>
+            <button class="btn btn-secondary col m-1" onclick="addNum('6')">6</button>
+            <button class="btn btn-orange col m-1" onclick="addNum('1')">-</button>
+        </div>
+        <div class="row">
+            <button class="btn btn-secondary col m-1" onclick="addNum('7')">7</button>
+            <button class="btn btn-secondary col m-1" onclick="addNum('8')">8</button>
+            <button class="btn btn-secondary col m-1" onclick="addNum('9')">9</button>
+            <button class="btn btn-orange col m-1" onclick="addNum('1')">*</button>
+        </div>
+        <div class="row">
+            <button class="btn btn-secondary col m-1" onclick="addNum('0')">0</button>
+            <button class="btn btn-secondary col m-1" onclick="addDecimal()">.</button>
+            <button class="btn btn-primary col m-1" onclick="addNum('1')">=</button>
+            <button class="btn btn-orange col m-1" onclick="addNum('1')">/</button>
+        </div>
+        <div class="row mt-3">
+            <button class="btn btn-danger col" onclick="clearCal()">CLEAR</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    var xmlhttp;
+    var calculator = document.getElementById("calculator");
+    var isDecimal = false;
+
+    if (window.ActiveXObject) {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    } else {
+        xmlhttp = new XMLHttpRequest();
+    }
+
+    function makerequest(serverPage, objID) {
+        var obj = document.getElementById(objID);
+        xmlhttp.open("GET", serverPage);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                obj.innerHTML = xml.http.responseText;
+            }
+        }
+        xmlhttp.send();
+    }
+
+    function addNum(number) {
+        if( calculator.value === "0") {
+            calculator.value = "";
+        }
+        console.log("Add number: " + number)
+        calculator.value = calculator.value + number;
+    }
+
+    function addDecimal() {
+        if (isDecimal == false) {
+            isDecimal = true;
+            console.log("Add decimal !")
+            calculator.value = calculator.value + ".";
+        } else {
+            console.log("Already add decimal, nothing happen")
+        }
+    }
+
+    function operation(operand) {
+        makerequest()
+    }
+
+    function clearCal() {
+        console.log("clear")
+        isDecimal = false;
+        calculator.value = "0";
+        // clear backend
+    }
+</script>

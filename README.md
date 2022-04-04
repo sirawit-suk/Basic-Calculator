@@ -1,5 +1,9 @@
 # Basic-Calculator
 
+## How to Run
+- Open terminal
+- Hot reload `dotnet watch run`
+
 ## Requirements
 1. Use AJAX (Asynchronous Javascript and XML)
 2. Frontend-Backend use ASP.NET MVC (Mode-View-Controller)
