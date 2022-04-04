@@ -1,5 +1,5 @@
 # Basic-Calculator
-
+![my-calculator](img/mycalculator.png)
 ## How to Run
 - Open terminal
 - Hot reload `dotnet watch run`
