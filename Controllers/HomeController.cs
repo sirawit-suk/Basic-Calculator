@@ -73,6 +73,7 @@ namespace BasicCalculator.Controllers
                 }
             }
 
+            calculator.Value = Math.Round(calculator.Value, 14);
             return Content(Convert.ToString(calculator.Value), "text/plain", Encoding.UTF8);
         }
 

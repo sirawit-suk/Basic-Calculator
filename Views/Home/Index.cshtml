@@ -21,7 +21,7 @@
         </div>
 
         <div class="row">
-            <input id="calculator" class="form-control bg-white text-right" type="text" value="0" readonly>
+            <input id="calculator" class="form-control bg-white text-right" type="text" value="0" readonly style="font-size: 1.2rem;">
         </div>
 
         <div class="row mt-3">
@@ -59,6 +59,8 @@
     var calculator = document.getElementById("calculator");
     var isDecimal = false;
     var isOperand = false;
+    var equalPressAmount = 0;
+    var newValue = 0;
 
     if (window.ActiveXObject) {
         console.log("nope!");
@@ -71,12 +73,23 @@
 
     function makerequest(url, operand = "") {
 
-        let newUrl = url + "?newValue=" + calculator.value + "&operand=" + operand;
+        if (operand !== 'equ') {
+            newValue = calculator.value;
+            equalPressAmount = 0;
+        } else {
+            if (equalPressAmount <= 0) {
+                newValue = calculator.value; // equal more than 1 press case
+            }
+            equalPressAmount += 1;
+        }
+
+        let newUrl = url + "?newValue=" + newValue + "&operand=" + operand;
         xmlhttp.open("GET", newUrl); // Have problem with POST method, Don't know yet...
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                if (operand === 'equ')
+                if (operand === 'equ') {
                     calculator.value = xmlhttp.responseText;
+                }
             }
         }
         xmlhttp.send();
@@ -113,6 +126,7 @@
         console.log("clear screen")
         isDecimal = false;
         isOperand = false;
+        equalPressAmount = 0;
         calculator.value = "0";
     }
 
@@ -120,6 +134,7 @@
         console.log("clear")
         isDecimal = false;
         isOperand = false;
+        equalPressAmount = 0;
         calculator.value = "0";
         // clear backend
         makerequest("/Home/AllClear");
